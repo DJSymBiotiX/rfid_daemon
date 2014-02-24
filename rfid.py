@@ -4,6 +4,7 @@
 from evdev import InputDevice
 from librfid.HID import get_keydown
 from librfid.Timer import Timer
+from librfid.FIFO import FIFO
 
 # Setup Input Device
 dev = InputDevice('/dev/input/event2')
@@ -15,6 +16,10 @@ id_buffer = []
 # Setup Timer
 TIMEOUT = 5.0
 timer = Timer(timeout=TIMEOUT)
+
+# FIFO Info
+FIFO_PATH = 'fifo'
+fifo = FIFO(FIFO_PATH)
 
 # Read Inpud Device Forever
 for event in dev.read_loop():
@@ -39,6 +44,6 @@ for event in dev.read_loop():
 
     # If Buffer is full. Print and reset buffer
     if buf_len == BUFFER_SIZE:
-        print "Buffer: %s" % ''.join(id_buffer)
+        fifo.write(''.join(id_buffer))
         id_buffer = []
         timer.clear()
