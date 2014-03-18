@@ -26,6 +26,7 @@ fifo = FIFO(FIFO_PATH)
 for event in dev.read_loop():
     # Check Timer. Clear Buffer if timed out
     if timer.timedout():
+        print "Timeout: {%s}" % ''.join(id_buffer)
         id_buffer = []
 
     # Get key down event
@@ -45,6 +46,13 @@ for event in dev.read_loop():
 
     # If Buffer is full. Write and reset buffer
     if buf_len == BUFFER_SIZE:
-        fifo.write(''.join(id_buffer))
+        id_str = ''.join(id_buffer)
+        # We can assume that a proper ID starts with 3 0's
+        if id_str[0:3] == '000':
+            fifo.write(id_str)
+        else:
+            print "Incorrect ID: {%s}" % id_str
+
+        # Clear
         id_buffer = []
         timer.clear()
