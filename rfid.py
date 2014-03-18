@@ -7,7 +7,7 @@ from librfid.Timer import Timer
 from librfid.FIFO import FIFO
 
 # Setup Input Device
-dev = InputDevice('/dev/input/event2')
+dev = InputDevice('/dev/input/event0')
 
 # Setup ID Buffer
 BUFFER_SIZE = 10
